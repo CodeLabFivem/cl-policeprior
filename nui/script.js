@@ -309,35 +309,57 @@ document.getElementById('reset-settings-btn').addEventListener('click', () => {
 timerInput.addEventListener('input', updateApplyButton);
 
 // Drag functionality
+let isDragging = false;
+
 statusDisplay.addEventListener('mousedown', (e) => {
     if (!isEditMode) return;
     
+    isDragging = true;
     const rect = statusDisplay.getBoundingClientRect();
     dragOffset.x = e.clientX - rect.left;
     dragOffset.y = e.clientY - rect.top;
     
+    statusDisplay.style.transition = 'none';
     document.addEventListener('mousemove', handleDrag);
     document.addEventListener('mouseup', stopDrag);
     e.preventDefault();
 });
 
 function handleDrag(e) {
-    if (!isEditMode) return;
+    if (!isEditMode || !isDragging) return;
     
-    const x = e.clientX - dragOffset.x;
-    const y = e.clientY - dragOffset.y;
-    
-    const maxX = window.innerWidth - statusDisplay.offsetWidth;
-    const maxY = window.innerHeight - statusDisplay.offsetHeight;
-    
-    statusDisplay.style.left = Math.max(0, Math.min(maxX, x)) + 'px';
-    statusDisplay.style.top = Math.max(0, Math.min(maxY, y)) + 'px';
-    statusDisplay.style.right = 'auto';
-    statusDisplay.style.bottom = 'auto';
-    statusDisplay.style.transform = 'none';
+    requestAnimationFrame(() => {
+        const x = e.clientX - dragOffset.x;
+        const y = e.clientY - dragOffset.y;
+        
+        const maxX = window.innerWidth - statusDisplay.offsetWidth;
+        const maxY = window.innerHeight - statusDisplay.offsetHeight;
+        
+        const clampedX = Math.max(0, Math.min(maxX, x));
+        const clampedY = Math.max(0, Math.min(maxY, y));
+        
+        statusDisplay.style.transform = `translate(${clampedX}px, ${clampedY}px)`;
+        statusDisplay.style.left = '0';
+        statusDisplay.style.top = '0';
+        statusDisplay.style.right = 'auto';
+        statusDisplay.style.bottom = 'auto';
+    });
 }
 
 function stopDrag() {
+    if (!isDragging) return;
+    
+    isDragging = false;
+    statusDisplay.style.transition = '';
+    
+    const transform = statusDisplay.style.transform;
+    const match = transform.match(/translate\(([^,]+)px,\s*([^)]+)px\)/);
+    if (match) {
+        statusDisplay.style.left = match[1] + 'px';
+        statusDisplay.style.top = match[2] + 'px';
+        statusDisplay.style.transform = 'none';
+    }
+    
     document.removeEventListener('mousemove', handleDrag);
     document.removeEventListener('mouseup', stopDrag);
 }
