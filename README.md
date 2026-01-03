@@ -1,6 +1,6 @@
 # 🚨 Priority System
 
-A modern, customizable priority status system for FiveM servers with an elegant UI and advanced features.
+A sleek, customizable FiveM priority system for law enforcement roles. Features real-time status pills, multiple priority states with timers, drag-and-drop UI, job-based permissions, and an intuitive settings panel. Perfect for police, sheriff, and state roleplay servers.
 
 ## ✨ Features
 

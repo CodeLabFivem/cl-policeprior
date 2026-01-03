@@ -23,7 +23,11 @@ end
 local function LoadPlayerSettings()
     local citizenId = QBCore.Functions.GetPlayerData().citizenid
     if citizenId then
+<<<<<<< HEAD
         local saved = GetResourceKvpString('priority-system_' .. citizenId)
+=======
+        local saved = GetResourceKvpString('priority-settings_' .. citizenId)
+>>>>>>> 177a23ce0653c001779cff749cf9ef4afeeb846f
         if saved then
             local decoded = json.decode(saved)
             if decoded then
